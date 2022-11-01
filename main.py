@@ -8,8 +8,17 @@ from transformers.tokenization_utils import BatchEncoding, PreTrainedTokenizer
 from typing import Dict, List, Union
 from tqdm import tqdm
 import torch.nn.functional as F
+import argparse
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--device", type=str, default="cuda:0")
+    parser.add_argument("--input_path", type=str, default="tweet.jsonl")
+    parser.add_argument("--model", type=str, default="cl-tohoku/bert-base-japanese-whole-word-masking")
+    return parser.parse_args()
+
 
 def get_data(path):
     with open(path) as f:
@@ -19,10 +28,11 @@ def get_data(path):
 
 @torch.inference_mode()
 def main():
-    device = "cuda:0"
-    model_name = "cl-tohoku/bert-base-japanese-whole-word-masking"
+    args = parse_args()
+    device = args.device
+    model_name = args.model
     df = pd.read_json(
-    "data/tweet.jsonl",
+    args.input_path,
     orient="records",
     lines=True,
     )
