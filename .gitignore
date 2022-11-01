@@ -1,0 +1,6 @@
+data/**
+poetry.lock
+exemplars.jsonl
+*.npz
+*.out
+*.ipynb
